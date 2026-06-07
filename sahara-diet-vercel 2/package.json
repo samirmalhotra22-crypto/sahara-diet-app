@@ -1,0 +1,6 @@
+{
+  "name": "sahara-diet-app",
+  "version": "1.0.0",
+  "description": "SAHARA Diet Guide - South Asian Heart & Metabolic Health",
+  "engines": { "node": "18.x" }
+}
