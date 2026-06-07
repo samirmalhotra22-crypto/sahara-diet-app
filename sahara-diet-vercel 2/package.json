@@ -2,6 +2,5 @@
   "name": "sahara-diet-app",
   "version": "1.0.0",
   "description": "SAHARA Diet Guide",
-  "engines": { "node": "24.x" }
+  "engines": { "node": "20.x" }
 }
-
