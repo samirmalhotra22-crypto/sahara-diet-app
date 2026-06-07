@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SAHARA Diet Guide</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:Georgia,serif;background:#0a140a;color:#f0ede8;min-height:100vh;display:flex;flex-direction:column;max-width:600px;margin:0 auto;}
+button{font-family:Georgia,serif;cursor:pointer;transition:opacity 0.15s;}
+button:active{opacity:0.7;}
+input{font-family:Georgia,serif;}
+#header{background:linear-gradient(90deg,#1b3a1b,#2d5a27);padding:12px 14px;border-bottom:2px solid #4a8a3f;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+#header h1{font-size:18px;color:#c8e6b0;}
+#header p{font-size:10px;color:#88bb77;margin-top:2px;}
+.lang-btn{padding:5px 9px;border-radius:20px;border:2px solid #4a8a3f;background:transparent;color:#88bb77;font-size:11px;}
+.lang-btn.active{background:#4a8a3f;color:#fff;border-color:#c8e6b0;font-weight:700;}
+#tabbar{display:flex;background:#08100a;border-bottom:1px solid #1a3a1a;position:sticky;top:62px;z-index:99;}
+.tab-btn{flex:1;padding:8px 2px;background:none;border:none;border-bottom:3px solid transparent;color:#4a6a4a;font-size:10px;line-height:1.4;}
+.tab-btn.active{border-bottom:3px solid #6abf5a;color:#c8e6b0;}
+#content{flex:1;overflow-y:auto;padding:14px;}
+.page{display:none;}.page.active{display:block;}
+.card{background:#0e1a0e;border:1px solid #2a4a2a;border-radius:14px;margin-bottom:14px;overflow:hidden;}
+.card-pad{padding:14px;}
+.card-header{background:linear-gradient(90deg,#1e3a1e,#2a5a2a);padding:11px 14px;font-size:12px;font-weight:700;color:#c8e6b0;text-align:center;letter-spacing:.5px;}
+.rule-card{background:linear-gradient(135deg,#1e3a1e,#2a4a2a);border:2px solid #4a8a3f;border-radius:14px;padding:14px 16px;margin-bottom:16px;}
+.btn-green{width:100%;padding:13px;background:linear-gradient(90deg,#2d6a27,#4a8a3f);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;margin-top:8px;display:block;}
+.btn-blue{width:100%;padding:13px;background:linear-gradient(90deg,#1a4a7a,#2a6abf);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;margin-top:8px;display:block;}
+.btn-outline{padding:6px 14px;background:#222;border:1px solid #555;border-radius:20px;color:#ccc;font-size:12px;}
+.btn-check{width:100%;padding:12px;background:#2a5a2a;border:1px solid #4a8a3f;border-radius:8px;color:#c8e6b0;font-size:14px;font-weight:600;margin-top:8px;}
+.upload-zone{background:#0a140a;border:2px dashed #3a5a3a;border-radius:14px;padding:18px;margin-bottom:14px;text-align:center;}
+.num-input{width:100%;padding:10px 12px;background:#0a140a;border:1px solid #3a5a3a;border-radius:8px;color:#c8e6b0;font-size:15px;outline:none;}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.input-group label{font-size:10px;color:#88bb77;display:block;margin-bottom:5px;}
+.loading{text-align:center;padding:20px 0;color:#88bb77;}
+.error-box{background:#2a1a1a;border:1px solid #883333;border-radius:10px;padding:12px;margin-top:10px;color:#ff9999;font-size:12px;text-align:center;line-height:1.5;}
+.notfound-box{background:#2a1a1a;border:1px solid #883333;border-radius:10px;padding:14px;margin-top:10px;text-align:center;}
+.cat-btn{width:100%;padding:13px 14px;background:none;border:none;display:flex;align-items:center;gap:10px;color:inherit;text-align:left;}
+.cat-body{display:none;border-top:1px solid #2a4a2a;}.cat-body.open{display:grid;grid-template-columns:1fr 1fr;}
+.col-choose{padding:12px;border-right:1px solid #2a4a2a;}.col-lose{padding:12px;}
+.col-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;}
+.badge-green{background:#2d5a27;color:#c8e6b0;}.badge-red{background:#5a2727;color:#ffaaaa;}
+.food-item{font-size:11px;margin-bottom:5px;display:flex;gap:5px;line-height:1.3;}
+.food-item.green{color:#aad090;}.food-item.red{color:#e08080;}
+.sub-table-header{display:grid;grid-template-columns:72px 1fr 1fr;border-bottom:1px solid #2a4a2a;}
+.sub-table-row{display:grid;grid-template-columns:72px 1fr 1fr;border-bottom:1px solid #2a4a2a;}
+.sub-table-row:last-child{border-bottom:none;}
+.sub-cat{padding:10px 6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#c8e6b0;text-align:center;border-right:1px solid #2a4a2a;background:#111e11;}
+.sub-choose{padding:8px 10px;border-right:1px solid #2a4a2a;}.sub-lose{padding:8px 10px;}
+.warning-box{background:#ff990022;border:1px solid #ff9900;border-radius:8px;padding:8px 10px;display:flex;gap:8px;align-items:flex-start;margin-top:8px;}
+.info-boxes{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px 0;}
+.info-box{border-radius:10px;padding:10px 14px;text-align:center;flex:1;}
+.step-row{display:flex;gap:12px;margin-bottom:10px;cursor:pointer;}
+.step-circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.step-card{flex:1;border-radius:10px;padding:11px 13px;transition:all 0.2s;}
+.step-title{font-weight:700;font-size:13px;}
+.step-desc{margin:6px 0 0;font-size:12px;color:#bbb;line-height:1.6;display:none;}
+.step-desc.open{display:block;}
+.ladder-bars{display:flex;align-items:flex-end;gap:6px;height:80px;margin-bottom:18px;}
+.ladder-bar{flex:1;border-radius:8px 8px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div>
+    <h1 id="appTitle">SAHARA Diet Guide</h1>
+    <p id="appSubtitle">South Asian Heart &amp; Metabolic Health</p>
+    <p style="font-size:9px;color:#4a7a3f;margin-top:1px;letter-spacing:0.3px;">Dev. by Dr. Samir Malhotra</p>
+  </div>
+  <div style="display:flex;gap:5px;">
+    <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+    <button class="lang-btn" onclick="setLang('pa',this)">ਪੰ</button>
+    <button class="lang-btn" onclick="setLang('hi',this)">हि</button>
+  </div>
+</div>
+
+<div id="tabbar">
+  <button class="tab-btn active" onclick="setTab('scanner',0)">📷<br>Scanner</button>
+  <button class="tab-btn" onclick="setTab('info',1)">📊<br>Infographic</button>
+  <button class="tab-btn" onclick="setTab('guide',2)">🥗<br>Food Guide</button>
+  <button class="tab-btn" onclick="setTab('ladder',3)">📈<br>Change Plan</button>
+</div>
+
+<div id="content">
+
+<!-- SCANNER -->
+<div id="page-scanner" class="page active">
+  <div class="rule-card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <span style="font-size:22px;">📏</span>
+      <strong id="ruleTitle" style="color:#c8e6b0;font-size:16px;">The 10:1 Rule</strong>
+    </div>
+    <div class="info-boxes">
+      <div class="info-box" style="background:#3a5fc1;">
+        <div style="font-size:10px;color:#aac0ff;" id="carbsLabel">Total Carbs</div>
+        <div style="font-size:14px;font-weight:700;color:#fff;">Max 10g</div>
+      </div>
+      <div style="font-size:28px;font-weight:900;color:#c8e6b0;">10:1</div>
+      <div class="info-box" style="background:#3a8a27;">
+        <div style="font-size:10px;color:#a0e090;" id="fiberLabel">Fiber</div>
+        <div style="font-size:14px;font-weight:700;color:#fff;">Per 1g</div>
+      </div>
+    </div>
+    <p id="ruleDesc" style="font-size:12px;color:#88bb77;text-align:center;">For every 10g of carbs, there must be at least 1g of fiber.</p>
+  </div>
+
+  <div class="upload-zone" id="uploadZone">
+    <div style="font-size:40px;margin-bottom:8px;">📸</div>
+    <h3 id="scanTitle" style="font-size:15px;color:#c8e6b0;margin-bottom:4px;">Check Your Food</h3>
+    <p id="scanSubtitle" style="font-size:11px;color:#88bb77;margin-bottom:14px;">Upload a close-up of the Nutrition Facts panel</p>
+    <button class="btn-green" onclick="document.getElementById('fileInput').click()" id="uploadBtn">📁 Upload Label Photo</button>
+    <button class="btn-blue" onclick="document.getElementById('camInput').click()" id="camBtn">📷 Take Picture of Label</button>
+    <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFile(event)">
+    <input type="file" id="camInput" accept="image/*" capture="environment" style="display:none;" onchange="handleFile(event)">
+    <p style="font-size:10px;color:#556;margin-top:10px;">💡 Tip: Fill the frame with just the Nutrition Facts box</p>
+  </div>
+
+  <div id="imgSection" style="display:none;margin-bottom:14px;">
+    <div style="position:relative;margin-bottom:10px;">
+      <img id="imgPreview" src="" alt="label" style="width:100%;border-radius:10px;border:2px solid #4a8a3f;max-height:280px;object-fit:contain;background:#050e05;display:block;">
+      <button class="btn-outline" onclick="resetScan()" style="position:absolute;top:8px;right:8px;" id="tryAgainBtn">✕ New Photo</button>
+    </div>
+    <button class="btn-green" id="analyzeBtn" onclick="analyzeLabel()">🔍 Analyze Label</button>
+    <div id="loadingDiv" class="loading" style="display:none;"><div style="font-size:30px;margin-bottom:8px;">⏳</div><div id="analyzingText">Reading label…</div></div>
+    <div id="errorDiv" class="error-box" style="display:none;"></div>
+    <div id="resultDiv"></div>
+  </div>
+
+  <div class="card card-pad">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+      <span style="font-size:18px;">✏️</span>
+      <strong id="manualTitle" style="color:#c8e6b0;font-size:14px;">Enter Values Manually</strong>
+    </div>
+    <p style="font-size:11px;color:#88bb77;margin-bottom:12px;">Read the numbers off the label and type them here.</p>
+    <div class="input-grid">
+      <div class="input-group">
+        <label id="manualCarbsLbl">Total Carbs (g)</label>
+        <input type="number" class="num-input" id="mCarbs" placeholder="e.g. 32" oninput="clearManualResult()">
+      </div>
+      <div class="input-group">
+        <label id="manualFiberLbl">Fiber (g)</label>
+        <input type="number" class="num-input" id="mFiber" placeholder="e.g. 3" oninput="clearManualResult()">
+      </div>
+    </div>
+    <button class="btn-check" onclick="checkManual()" id="checkBtn">Check Ratio</button>
+    <div id="manualResult"></div>
+  </div>
+</div>
+
+<!-- INFOGRAPHIC -->
+<div id="page-info" class="page">
+  <div class="card">
+    <div class="card-header">🛒 THE GROCERY STORE DIAGNOSTIC</div>
+    <div class="card-pad">
+      <div class="info-boxes">
+        <div class="info-box" style="background:#3a5fc1;"><div style="font-size:10px;color:#aac0ff;">Total Carbohydrates</div><div style="font-size:11px;color:#ddd;">(Maximum 10 Grams)</div></div>
+        <div style="font-size:30px;font-weight:900;color:#c8e6b0;">10:1</div>
+        <div class="info-box" style="background:#3a8a27;"><div style="font-size:10px;color:#a0e090;">Dietary Fiber</div><div style="font-size:11px;color:#ddd;">(Per 1 Gram)</div></div>
+      </div>
+      <div style="background:#ffffff10;border-radius:10px;padding:10px 12px;">
+        <p style="font-size:12px;color:#c8e6b0;text-align:center;font-weight:600;margin-bottom:6px;">The 10:1 Grocery Store Rule</p>
+        <p style="font-size:11px;color:#aaa;text-align:center;margin-bottom:8px;">For every packaged food item, check the nutrition label. The ratio of total carbohydrates to fiber should be 10:1 or less.</p>
+        <div class="warning-box"><span style="font-size:16px;flex-shrink:0;">⚠️</span><p style="font-size:10px;color:#ffcc77;margin:0;line-height:1.5;">Example: A slice of bread with 20g carbs and 1g fiber = 20:1 ratio. Leave it on the shelf. Seek 8g carbs per 1g fiber.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">🥗 PRAGMATIC SUBSTITUTIONS — SOUTH ASIAN VEGETARIAN</div>
+    <div class="sub-table-header">
+      <div></div>
+      <div style="background:#2d5a27;padding:8px;text-align:center;font-size:11px;font-weight:700;color:#c8e6b0;border-right:1px solid #3a5a3a;">✅ Foods to Choose</div>
+      <div style="background:#5a2727;padding:8px;text-align:center;font-size:11px;font-weight:700;color:#ffaaaa;">❌ Foods to Lose</div>
+    </div>
+    <div class="sub-table-row">
+      <div class="sub-cat">FAT<br>🫒</div>
+      <div class="sub-choose"><div class="food-item green">🥑 Avocado</div><div class="food-item green">🫒 Olive oil</div><div class="food-item green">🥜 Peanut butter</div><div class="food-item green">🧈 Minimal butter</div><div class="food-item green">🥛 Yogurt</div><div class="food-item green">🍗 Chicken</div><div class="food-item green">🐟 Fish</div></div>
+      <div class="sub-lose"><div class="food-item red">🥩 Red meat</div><div class="food-item red">🌭 Processed meats</div><div class="food-item red">🧈 Margarines</div><div class="food-item red">🫙 Veg. shortenings</div></div>
+    </div>
+    <div class="sub-table-row">
+      <div class="sub-cat">CARBS<br>🌾</div>
+      <div class="sub-choose"><div class="food-item green">🍎 Colorful fruits</div><div class="food-item green">🥦 Vegetables*</div><div class="food-item green">🌾 Oat Bran</div><div class="food-item green">🫘 Kidney Beans</div><div class="food-item green">🫘 Black Beans</div><div class="food-item green">🍛 Lentils</div></div>
+      <div class="sub-lose"><div class="food-item red">🍬 Sugar</div><div class="food-item red">🍰 Desserts</div><div class="food-item red">🫓 All Breads/Roti</div><div class="food-item red">🥔 Potatoes</div><div class="food-item red">🍚 White Rice</div><div class="food-item red">🍝 Pasta</div></div>
+    </div>
+    <div class="sub-table-row">
+      <div class="sub-cat">PROTEIN<br>💪</div>
+      <div class="sub-choose"><div class="food-item green">🥜 Almonds</div><div class="food-item green">🌰 Walnuts</div><div class="food-item green">🥜 Cashews (unsalted)</div><div class="food-item green">🫘 Soy protein</div><div class="food-item green">🥚 Eggs</div><div class="food-item green">🧀 Non-proc. cheese</div><div class="food-item green">🍲 Daals (mung, toor, urad)</div></div>
+      <div class="sub-lose"><div class="food-item red">🥓 Bacon</div><div class="food-item red">🍖 Ham</div><div class="food-item red">🌭 Processed Meats</div></div>
+    </div>
+    <div style="padding:8px 12px;background:#0a140a;font-size:9px;color:#445;">*Excluding potatoes and corn &nbsp;|&nbsp; Source: SAHARA Diet</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">📈 THE GRADUAL REDUCTION LADDER</div>
+    <div class="card-pad">
+      <div style="display:flex;gap:12px;margin-bottom:14px;">
+        <div style="display:flex;flex-direction:column;align-items:center;"><div style="width:32px;height:32px;border-radius:50%;background:#cc3333;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:15px;flex-shrink:0;">1</div><div style="width:2px;flex:1;background:linear-gradient(#cc3333,#dd8833);min-height:20px;margin-top:3px;"></div></div>
+        <div style="flex:1;background:#cc333318;border:1px solid #cc3333;border-radius:10px;padding:10px 12px;"><div style="font-weight:700;color:#cc3333;font-size:12px;margin-bottom:4px;">Step 1: Portion Halving</div><p style="font-size:11px;color:#bbb;line-height:1.5;margin:0;">Cut staple size in half. If dinner includes two chapatis, reduce to exactly one for the first few weeks.</p><div style="margin-top:8px;height:5px;background:#1a2a1a;border-radius:3px;overflow:hidden;"><div style="height:100%;width:55%;background:#cc3333;border-radius:3px;"></div></div></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:14px;">
+        <div style="display:flex;flex-direction:column;align-items:center;"><div style="width:32px;height:32px;border-radius:50%;background:#dd8833;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:15px;flex-shrink:0;">2</div><div style="width:2px;flex:1;background:linear-gradient(#dd8833,#4a8a3f);min-height:20px;margin-top:3px;"></div></div>
+        <div style="flex:1;background:#dd883318;border:1px solid #dd8833;border-radius:10px;padding:10px 12px;"><div style="font-weight:700;color:#dd8833;font-size:12px;margin-bottom:4px;">Step 2: Substitution Phase</div><p style="font-size:11px;color:#bbb;line-height:1.5;margin:0;">Replace white polished basmati rice with higher-protein grains. Introduce brown rice, parboiled rice, or quinoa as bases for daals and sabzis.</p><div style="margin-top:8px;height:5px;background:#1a2a1a;border-radius:3px;overflow:hidden;"><div style="height:100%;width:78%;background:#dd8833;border-radius:3px;"></div></div></div>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:#4a8a3f;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:15px;flex-shrink:0;">3</div>
+        <div style="flex:1;background:#4a8a3f18;border:1px solid #4a8a3f;border-radius:10px;padding:10px 12px;"><div style="font-weight:700;color:#4a8a3f;font-size:12px;margin-bottom:4px;">Step 3: "Off-Day" Strategy</div><p style="font-size:11px;color:#bbb;line-height:1.5;margin:0;">Drop chapati/naan/roti completely for most of the week, reserving it for one "off day" per week to maintain cultural joy without the metabolic burden.</p><div style="margin-top:8px;height:5px;background:#1a2a1a;border-radius:3px;overflow:hidden;"><div style="height:100%;width:100%;background:#4a8a3f;border-radius:3px;"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOD GUIDE -->
+<div id="page-guide" class="page">
+  <h2 style="font-size:16px;color:#c8e6b0;margin-bottom:4px;">Food Substitutions</h2>
+  <p style="font-size:11px;color:#88bb77;margin-bottom:14px;">Tap a category to expand</p>
+  <div class="card" style="border-color:#e8a02055;">
+    <button class="cat-btn" onclick="toggleCat('fat')"><span style="font-size:24px;">🫒</span><strong style="color:#c8e6b0;font-size:15px;flex:1;">Fat</strong><span id="arr-fat" style="color:#e8a020;font-size:18px;">▾</span></button>
+    <div class="cat-body open" id="body-fat">
+      <div class="col-choose"><span class="col-badge badge-green">✓ CHOOSE</span><div class="food-item green">🥑 Avocado</div><div class="food-item green">🫒 Olive oil</div><div class="food-item green">🥜 Peanut butter</div><div class="food-item green">🧈 Minimal butter</div><div class="food-item green">🥛 Yogurt</div><div class="food-item green">🍗 Chicken</div><div class="food-item green">🐟 Fish</div></div>
+      <div class="col-lose"><span class="col-badge badge-red">✗ LOSE</span><div class="food-item red">🥩 Red meat</div><div class="food-item red">🌭 Processed meats</div><div class="food-item red">🧈 Margarines</div><div class="food-item red">🫙 Veg. shortenings</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#4a9adf55;">
+    <button class="cat-btn" onclick="toggleCat('carbs')"><span style="font-size:24px;">🌾</span><strong style="color:#c8e6b0;font-size:15px;flex:1;">Carbohydrates</strong><span id="arr-carbs" style="color:#4a9adf;font-size:18px;transform:rotate(-90deg);display:inline-block;">▾</span></button>
+    <div class="cat-body" id="body-carbs">
+      <div class="col-choose"><span class="col-badge badge-green">✓ CHOOSE</span><div class="food-item green">🍎 Colorful fruits</div><div class="food-item green">🥦 Vegetables*</div><div class="food-item green">🌾 Oat Bran</div><div class="food-item green">🫘 Kidney Beans</div><div class="food-item green">🫘 Black Beans</div><div class="food-item green">🍛 Lentils</div></div>
+      <div class="col-lose"><span class="col-badge badge-red">✗ LOSE</span><div class="food-item red">🍬 Sugar</div><div class="food-item red">🍰 Desserts</div><div class="food-item red">🫓 Breads/Roti</div><div class="food-item red">🥔 Potatoes</div><div class="food-item red">🍚 White Rice</div><div class="food-item red">🍝 Pasta</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#c06ae055;">
+    <button class="cat-btn" onclick="toggleCat('protein')"><span style="font-size:24px;">💪</span><strong style="color:#c8e6b0;font-size:15px;flex:1;">Protein</strong><span id="arr-protein" style="color:#c06ae0;font-size:18px;transform:rotate(-90deg);display:inline-block;">▾</span></button>
+    <div class="cat-body" id="body-protein">
+      <div class="col-choose"><span class="col-badge badge-green">✓ CHOOSE</span><div class="food-item green">🥜 Almonds</div><div class="food-item green">🌰 Walnuts</div><div class="food-item green">🥜 Cashews (unsalted)</div><div class="food-item green">🫘 Soy protein</div><div class="food-item green">🥚 Eggs</div><div class="food-item green">🧀 Non-proc. cheese</div><div class="food-item green">🍲 Daals (mung, toor, urad)</div></div>
+      <div class="col-lose"><span class="col-badge badge-red">✗ LOSE</span><div class="food-item red">🥓 Bacon</div><div class="food-item red">🍖 Ham</div><div class="food-item red">🌭 Processed Meats</div></div>
+    </div>
+  </div>
+  <p style="font-size:9px;color:#445;text-align:center;margin-top:4px;">*Excluding potatoes and corn</p>
+</div>
+
+<!-- LADDER -->
+<div id="page-ladder" class="page">
+  <h2 style="font-size:16px;color:#c8e6b0;margin-bottom:4px;">Gradual Reduction Ladder</h2>
+  <p style="font-size:11px;color:#88bb77;margin-bottom:16px;">Tap each step to expand</p>
+  <div class="ladder-bars">
+    <div class="ladder-bar" style="height:46px;background:#cc3333;" onclick="toggleStep(1)"><span style="font-size:18px;">🍽️</span><span style="font-size:10px;color:#fff;font-weight:700;">1</span></div>
+    <div class="ladder-bar" style="height:63px;background:#dd8833;" onclick="toggleStep(2)"><span style="font-size:18px;">🔄</span><span style="font-size:10px;color:#fff;font-weight:700;">2</span></div>
+    <div class="ladder-bar" style="height:80px;background:#4a8a3f;" onclick="toggleStep(3)"><span style="font-size:18px;">🎯</span><span style="font-size:10px;color:#fff;font-weight:700;">3</span></div>
+  </div>
+  <div class="step-row" onclick="toggleStep(1)">
+    <div class="step-circle" style="background:#cc333355;">🍽️</div>
+    <div class="step-card" id="scard-1" style="background:#0a140a;border:1px solid #2a4a2a;"><div class="step-title" style="color:#cc3333;">Step 1: Portion Halving</div><div class="step-desc" id="sdesc-1">Cut staple size in half. If a typical evening meal includes two chapatis, reduce to exactly one for the first few weeks.</div></div>
+  </div>
+  <div class="step-row" onclick="toggleStep(2)">
+    <div class="step-circle" style="background:#dd883355;">🔄</div>
+    <div class="step-card" id="scard-2" style="background:#0a140a;border:1px solid #2a4a2a;"><div class="step-title" style="color:#dd8833;">Step 2: Substitution Phase</div><div class="step-desc" id="sdesc-2">Replace white polished basmati rice with higher-protein grains. Introduce brown rice, parboiled rice, or quinoa as bases for daals and sabzis.</div></div>
+  </div>
+  <div class="step-row" onclick="toggleStep(3)">
+    <div class="step-circle" style="background:#4a8a3f55;">🎯</div>
+    <div class="step-card" id="scard-3" style="background:#0a140a;border:1px solid #2a4a2a;"><div class="step-title" style="color:#4a8a3f;">Step 3: "Off-Day" Strategy</div><div class="step-desc" id="sdesc-3">Drop chapati/naan/roti completely for most of the week, reserving it for one "off day" per week to maintain cultural joy without the metabolic burden.</div></div>
+  </div>
+  <div style="background:#0a140a;border:1px solid #2a4a2a;border-radius:12px;padding:12px 14px;margin-top:10px;">
+    <div style="font-size:15px;margin-bottom:8px;">💡</div>
+    <div style="font-size:11px;color:#88bb77;margin-bottom:5px;display:flex;gap:6px;"><span style="color:#4a8a3f;flex-shrink:0;">→</span><span>Start small — even one change this week is progress.</span></div>
+    <div style="font-size:11px;color:#88bb77;margin-bottom:5px;display:flex;gap:6px;"><span style="color:#4a8a3f;flex-shrink:0;">→</span><span>Cook daals with more water to reduce portion density.</span></div>
+    <div style="font-size:11px;color:#88bb77;margin-bottom:5px;display:flex;gap:6px;"><span style="color:#4a8a3f;flex-shrink:0;">→</span><span>Use the scanner tab before buying packaged foods.</span></div>
+    <div style="font-size:11px;color:#88bb77;display:flex;gap:6px;"><span style="color:#4a8a3f;flex-shrink:0;">→</span><span>Cultural foods can still be enjoyed — just less often.</span></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+let currentLang='en', imgB64=null, imgMime='image/jpeg', activeStep=null;
+
+const S={
+  en:{ruleTitle:'The 10:1 Rule',ruleDesc:'For every 10g of carbs, there must be at least 1g of fiber.',carbsLabel:'Total Carbs',fiberLabel:'Fiber',scanTitle:'Check Your Food',scanSubtitle:'Upload a close-up of the Nutrition Facts panel',uploadBtn:'📁 Upload Label Photo',camBtn:'📷 Take Picture of Label',manualTitle:'Enter Values Manually',manualCarbsLbl:'Total Carbs (g)',manualFiberLbl:'Fiber (g)',checkBtn:'Check Ratio',analyzingText:'Reading label…',tryAgainBtn:'✕ New Photo',eat:'✓ EAT THIS',avoid:'✗ AVOID',borderline:'⚠ BORDERLINE',noLabel:'No label found. Try a closer photo filling the frame with just the Nutrition Facts box.',apiErr:'Analysis failed. Please try again or use manual entry.'},
+  pa:{ruleTitle:'10:1 ਨਿਯਮ',ruleDesc:'ਹਰ 10g ਕਾਰਬੋਹਾਈਡ੍ਰੇਟ ਲਈ ਘੱਟੋ-ਘੱਟ 1g ਫਾਈਬਰ।',carbsLabel:'ਕਾਰਬੋਹਾਈਡ੍ਰੇਟ',fiberLabel:'ਫਾਈਬਰ',scanTitle:'ਆਪਣਾ ਭੋਜਨ ਜਾਂਚੋ',scanSubtitle:'ਪੋਸ਼ਣ ਲੇਬਲ ਦੀ ਨੇੜੇ ਤੋਂ ਫ਼ੋਟੋ ਅੱਪਲੋਡ ਕਰੋ',uploadBtn:'📁 ਲੇਬਲ ਫ਼ੋਟੋ ਅੱਪਲੋਡ',camBtn:'📷 ਫ਼ੋਟੋ ਲਓ',manualTitle:'ਮੁੱਲ ਦਰਜ ਕਰੋ',manualCarbsLbl:'ਕਾਰਬੋਹਾਈਡ੍ਰੇਟ (g)',manualFiberLbl:'ਫਾਈਬਰ (g)',checkBtn:'ਜਾਂਚੋ',analyzingText:'ਲੇਬਲ ਪੜ੍ਹ ਰਿਹਾ ਹਾਂ…',tryAgainBtn:'✕ ਨਵੀਂ ਫ਼ੋਟੋ',eat:'✓ ਇਹ ਖਾਓ',avoid:'✗ ਪਰਹੇਜ਼ ਕਰੋ',borderline:'⚠ ਸੀਮਾਰੇਖਾ',noLabel:'ਲੇਬਲ ਨਹੀਂ ਮਿਲਿਆ। ਨੇੜੇ ਤੋਂ ਸਾਫ਼ ਫ਼ੋਟੋ ਖਿੱਚੋ।',apiErr:'ਵਿਸ਼ਲੇਸ਼ਣ ਅਸਫਲ। ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।'},
+  hi:{ruleTitle:'10:1 नियम',ruleDesc:'हर 10g कार्बोहाइड्रेट के लिए कम से कम 1g फाइबर।',carbsLabel:'कार्बोहाइड्रेट',fiberLabel:'फाइबर',scanTitle:'अपना भोजन जांचें',scanSubtitle:'पोषण लेबल की नज़दीकी फ़ोटो अपलोड करें',uploadBtn:'📁 लेबल फ़ोटो अपलोड',camBtn:'📷 फ़ोटो लें',manualTitle:'मान दर्ज करें',manualCarbsLbl:'कार्बोहाइड्रेट (g)',manualFiberLbl:'फाइबर (g)',checkBtn:'जांचें',analyzingText:'लेबल पढ़ रहे हैं…',tryAgainBtn:'✕ नई फ़ोटो',eat:'✓ यह खाएं',avoid:'✗ परहेज़ करें',borderline:'⚠ सीमा रेखा',noLabel:'लेबल नहीं मिला। फ्रेम में सिर्फ Nutrition Facts बॉक्स रखकर फ़ोटो लें।',apiErr:'विश्लेषण विफल। पुनः प्रयास करें।'}
+};
+
+function setTab(t,i){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('page-'+t).classList.add('active');document.querySelectorAll('.tab-btn')[i].classList.add('active');}
+function setLang(l,btn){currentLang=l;const s=S[l];document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');['ruleTitle','ruleDesc','carbsLabel','fiberLabel','scanTitle','scanSubtitle','uploadBtn','camBtn','manualTitle','manualCarbsLbl','manualFiberLbl','checkBtn','analyzingText','tryAgainBtn'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=s[id];});}
+
+function handleFile(e){const file=e.target.files[0];if(!file)return;imgMime=file.type||'image/jpeg';const reader=new FileReader();reader.onload=ev=>{imgB64=ev.target.result.split(',')[1];document.getElementById('imgPreview').src=ev.target.result;document.getElementById('uploadZone').style.display='none';document.getElementById('imgSection').style.display='block';document.getElementById('analyzeBtn').style.display='block';document.getElementById('resultDiv').innerHTML='';document.getElementById('errorDiv').style.display='none';document.getElementById('loadingDiv').style.display='none';};reader.readAsDataURL(file);}
+function resetScan(){imgB64=null;document.getElementById('uploadZone').style.display='block';document.getElementById('imgSection').style.display='none';document.getElementById('resultDiv').innerHTML='';document.getElementById('errorDiv').style.display='none';document.getElementById('fileInput').value='';document.getElementById('camInput').value='';}
+
+async function analyzeLabel(){
+  if(!imgB64)return;
+  const s=S[currentLang];
+  document.getElementById('analyzeBtn').style.display='none';
+  document.getElementById('loadingDiv').style.display='block';
+  document.getElementById('errorDiv').style.display='none';
+  document.getElementById('resultDiv').innerHTML='';
+  try{
+    const resp=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageBase64:imgB64,mimeType:imgMime})});
+    document.getElementById('loadingDiv').style.display='none';
+    const r=await resp.json();
+    if(r.error){showErr(r.error);return;}
+    if(!r.found){document.getElementById('resultDiv').innerHTML=`<div class="notfound-box"><div style="font-size:28px;margin-bottom:6px;">❓</div><p style="color:#ff9999;font-size:12px;margin:0;">${s.noLabel}</p></div>`;document.getElementById('analyzeBtn').style.display='block';}
+    else showResult(r.verdict,r.carbs,r.fiber,r.ratio,r.explanation||'');
+  }catch(e){document.getElementById('loadingDiv').style.display='none';showErr(s.apiErr+': '+e.message);}
+}
+
+function showErr(msg){const el=document.getElementById('errorDiv');el.textContent='❌ '+msg;el.style.display='block';document.getElementById('analyzeBtn').style.display='block';}
+
+function showResult(verdict,carbs,fiber,ratio,expl){
+  const s=S[currentLang];
+  const c=verdict==='eat'?'#4caf50':verdict==='borderline'?'#ff9800':'#f44336';
+  const lbl=verdict==='eat'?s.eat:verdict==='borderline'?s.borderline:s.avoid;
+  const rn=typeof ratio==='number'?ratio:20;
+  const pct=Math.min(100,(rn/20)*100);
+  const bc=rn<=10?'#4caf50':rn<=15?'#ff9800':'#f44336';
+  document.getElementById('resultDiv').innerHTML=`<div style="background:${c}18;border:2px solid ${c};border-radius:14px;padding:14px;margin-top:12px;"><div style="font-size:24px;font-weight:900;color:${c};text-align:center;margin-bottom:10px;">${lbl}</div><div style="height:10px;background:#1a2a1a;border-radius:5px;overflow:hidden;border:1px solid #2a4a2a;margin-bottom:4px;"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#4caf50,${bc});border-radius:5px;"></div></div><div style="display:flex;justify-content:space-between;font-size:9px;color:#556;margin-bottom:10px;"><span>0</span><span style="color:#4caf50;">10✓</span><span style="color:#ff9800;">15</span><span style="color:#f44336;">20+</span></div><div style="display:flex;justify-content:space-around;margin-bottom:${expl?'10px':'0'};"><div style="text-align:center;"><div style="font-size:22px;font-weight:700;color:#7a9aff;">${carbs}g</div><div style="font-size:9px;color:#aaa;margin-top:2px;">${s.carbsLabel}</div></div><div style="text-align:center;"><div style="font-size:22px;font-weight:700;color:#6abf5a;">${fiber}g</div><div style="font-size:9px;color:#aaa;margin-top:2px;">${s.fiberLabel}</div></div><div style="text-align:center;"><div style="font-size:22px;font-weight:700;color:${c};">${ratio}:1</div><div style="font-size:9px;color:#aaa;margin-top:2px;">Ratio</div></div></div>${expl?`<div style="font-size:12px;color:#ddd;text-align:center;background:#ffffff10;border-radius:8px;padding:8px 10px;line-height:1.5;">${expl}</div>`:''}</div>`;
+}
+
+function clearManualResult(){document.getElementById('manualResult').innerHTML='';}
+function checkManual(){
+  const s=S[currentLang];
+  const c=parseFloat(document.getElementById('mCarbs').value);
+  const f=parseFloat(document.getElementById('mFiber').value);
+  if(isNaN(c)||isNaN(f))return;
+  let verdict,ratio;
+  if(f===0){verdict='avoid';ratio='∞';}else{ratio=Math.round((c/f)*10)/10;verdict=ratio<=10?'eat':ratio<=15?'borderline':'avoid';}
+  const col=verdict==='eat'?'#4caf50':verdict==='borderline'?'#ff9800':'#f44336';
+  const lbl=verdict==='eat'?s.eat:verdict==='borderline'?s.borderline:s.avoid;
+  const rn=typeof ratio==='number'?ratio:20;
+  const pct=Math.min(100,(rn/20)*100);
+  const bc=rn<=10?'#4caf50':rn<=15?'#ff9800':'#f44336';
+  document.getElementById('manualResult').innerHTML=`<div style="background:${col}18;border:2px solid ${col};border-radius:14px;padding:14px;margin-top:12px;"><div style="font-size:22px;font-weight:900;color:${col};text-align:center;margin-bottom:10px;">${lbl}</div><div style="height:10px;background:#1a2a1a;border-radius:5px;overflow:hidden;border:1px solid #2a4a2a;margin-bottom:4px;"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#4caf50,${bc});border-radius:5px;"></div></div><div style="display:flex;justify-content:space-around;margin-top:10px;"><div style="text-align:center;"><div style="font-size:20px;font-weight:700;color:#7a9aff;">${c}g</div><div style="font-size:9px;color:#aaa;">Carbs</div></div><div style="text-align:center;"><div style="font-size:20px;font-weight:700;color:#6abf5a;">${f}g</div><div style="font-size:9px;color:#aaa;">Fiber</div></div><div style="text-align:center;"><div style="font-size:20px;font-weight:700;color:${col};">${ratio}:1</div><div style="font-size:9px;color:#aaa;">Ratio</div></div></div></div>`;
+}
+
+function toggleCat(key){const body=document.getElementById('body-'+key);const arr=document.getElementById('arr-'+key);const open=body.classList.contains('open');body.classList.toggle('open',!open);arr.style.transform=open?'rotate(-90deg)':'rotate(0deg)';}
+
+function toggleStep(n){activeStep=activeStep===n?null:n;const cols={1:'#cc3333',2:'#dd8833',3:'#4a8a3f'};[1,2,3].forEach(i=>{const d=document.getElementById('sdesc-'+i),c=document.getElementById('scard-'+i);if(activeStep===i){d.classList.add('open');c.style.background=cols[i]+'18';c.style.border='1px solid '+cols[i];}else{d.classList.remove('open');c.style.background='#0a140a';c.style.border='1px solid #2a4a2a';}});}
+</script>
+</body>
+</html>
